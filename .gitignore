@@ -1,24 +1,28 @@
-.idea/vcs.xml
+# Entwicklungsumgebungen
+.idea/
+.vscode/
 
-backend/docker-compose.dev.yml
-
-.idea
-
-*.patch
-
-.vscode
-
-# --- Root-weit ergaenzt (Cleanup 2026-06-01) ---
-# Node-Dependencies gehoeren nicht ins Repo (Frontend hat eigene frontend/package-lock.json)
+# Abhängigkeiten
 node_modules/
 
-# Build-Output
+# Build-Ergebnisse
 target/
 dist/
 build/
+*.tsbuildinfo
 
-# Secrets / Schluessel - NIE committen (Defense-in-Depth zusaetzlich zu den Service-.gitignores)
+# Lokale Protokolle und Patches
+*.log
+*.patch
+
+# Lokale Umgebungsdateien
+.env
+.env.*
+
+# Vorlagen dürfen ins Repository
+!.env.example
+!.env.*.example
+
+# Private Schlüssel
 *.pem
 *.key
-.env
-.env.local
