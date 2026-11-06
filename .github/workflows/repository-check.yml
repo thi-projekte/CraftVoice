@@ -1,0 +1,72 @@
+name: Repository structure
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  structure-check:
+    name: Struktur und Dokumentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository laden
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Projektstruktur prüfen
+        shell: bash
+        run: |
+          required_dirs=(
+            frontend/Model
+            frontend/View
+            frontend/ViewModel
+            backend/services/user-service
+            backend/services/ai-service
+            backend/services/offer-service
+            backend/services/document-service
+            backend/services/catalog-service
+            gateway
+            processengine
+            contracts
+            documents
+            tests
+          )
+
+          for dir in "${required_dirs[@]}"; do
+            if [ ! -d "$dir" ]; then
+              echo "::error::Ordner fehlt: $dir"
+              exit 1
+            fi
+          done
+
+      - name: Dokumentation prüfen
+        shell: bash
+        run: |
+          required_files=(
+            README.md
+            .gitignore
+            documents/team-ownership.md
+            .github/pull_request_template.md
+          )
+
+          for file in "${required_files[@]}"; do
+            if [ ! -s "$file" ]; then
+              echo "::error::Datei fehlt oder ist leer: $file"
+              exit 1
+            fi
+          done
+
+      - name: Prüfumfang dokumentieren
+        shell: bash
+        run: |
+          echo "## Prüfumfang" >> "$GITHUB_STEP_SUMMARY"
+          echo "Projektstruktur und Dokumentationsdateien geprüft." >> "$GITHUB_STEP_SUMMARY"
+          echo "Keine Builds, Funktionstests oder Bereitstellung ausgeführt." >> "$GITHUB_STEP_SUMMARY"
